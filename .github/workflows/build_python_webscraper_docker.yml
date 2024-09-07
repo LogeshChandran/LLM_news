@@ -1,12 +1,8 @@
-name : Build python-webscraper Docker Image CI  # This name using is Run python-webscraper Docker Container for downstream
+name: Build python-webscraper Docker Image CI
 
 on:
-  # push:
-  #   branches: [ "main" ]
-  # pull_request:
-  #   branches: [ "main" ]
   release:
-    types: [published]
+    types: [published]  # Trigger only on release published
 
 jobs:
   build:
@@ -19,7 +15,7 @@ jobs:
       # Set up Docker image tag based on the current timestamp
       - name: Set up IMAGE_TAG
         id: tag
-        run: echo "IMAGE_TAG=$(date +'%Y-%M-%d-%H-%M-%S')" >> $GITHUB_ENV
+        run: echo "IMAGE_TAG=$(date +'%Y-%m-%d-%H-%M-%S')" >> $GITHUB_ENV
 
       # Log in to Docker Hub
       - name: Log in to Docker Hub
