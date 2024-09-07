@@ -28,5 +28,4 @@ jobs:
       - name: Push the Docker image to Docker Hub
         run: |
           IMAGE_TAG=$(date +%s)
-          docker push ${{ secrets.DOCKER_USERNAME }}/python-webscraper:${IMAGE_TAG}
           docker push ${{ secrets.DOCKER_USERNAME }}/python-webscraper:latest
