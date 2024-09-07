@@ -21,4 +21,4 @@ RUN . venv/bin/activate && pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Command to activate virtual environment and run your Python script
-CMD . venv/bin/activate && python scraper.py
+CMD . venv/bin/activate && python scraper.py 
