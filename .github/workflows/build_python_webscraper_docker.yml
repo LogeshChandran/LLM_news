@@ -9,7 +9,7 @@ name: Build python-webscraper Docker Image CI
 on:
   push:
     tags: 
-      - '*'
+      - '**'
   release:
     types: [published,released]  # Trigger only on release published
 
