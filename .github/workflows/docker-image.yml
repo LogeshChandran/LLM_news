@@ -1,5 +1,5 @@
 # name: Docker Image CI
-name : python-webscraper Docker Image CI
+name : Build python-webscraper Docker Image CI
 
 on:
   # push:
