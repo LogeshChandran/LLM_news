@@ -77,7 +77,7 @@ def articleURL_to_news(baseurl,url):
         if article_schedule:
             original_str = article_schedule.get_text(strip=True)
             parsed_date_time = datetime.strptime(original_str, "%B %d, %Y/ %H:%M IST")
-            new_format_str = parsed_date_time.strftime("%Y-%m-%d %H:%M")
+            article_time = parsed_date_time.strftime("%Y-%m-%d %H:%M")
 
         news = {'URL':baseurl,'Article url': url, 'title': title, 'subtitle': "", 'content': "", 'article time': article_time}
 
