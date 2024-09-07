@@ -29,7 +29,7 @@ def merge_datasets(existing_df, new_df):
     else:
         return new_df
     
-def pageURL_to_articleURLs(url):
+def pageURL_to_articleURLs(baseurl,url):
     print("Processing URL:", url)
     try:
         response = requests.get(url)
@@ -52,7 +52,7 @@ def pageURL_to_articleURLs(url):
         return []  # Return empty list on error
 
 # Function to extract news from article URLs
-def articleURL_to_news(url):
+def articleURL_to_news(baseurl,url):
     print("Processing article:", url)
     try:
         response = requests.get(url)
@@ -73,9 +73,13 @@ def articleURL_to_news(url):
 
         # Extract the article schedule (date and time)
         article_schedule = soup.find("div", class_="article_schedule")
-        article_time = article_schedule.get_text(strip=True) if article_schedule else "No date available"
+        article_time = "No date available"
+        if article_schedule:
+            original_str = article_schedule.get_text(strip=True)
+            parsed_date_time = datetime.strptime(original_str, "%B %d, %Y/ %H:%M IST")
+            new_format_str = parsed_date_time.strftime("%Y-%m-%d %H:%M")
 
-        news = {'URL': url, 'title': title, 'subtitle': "", 'content': "", 'article time': article_time}
+        news = {'URL':baseurl,'Article url': url, 'title': title, 'subtitle': "", 'content': "", 'article time': article_time}
 
         # Extract paragraphs while excluding disclaimers
         for tag in content_data.find_all(['h2', 'p']):
@@ -92,13 +96,13 @@ def articleURL_to_news(url):
         return None  # Return None on error
 
 # Function to handle both tasks in sequence
-def moneycontrol_task(page_url):
-    articleURLs = pageURL_to_articleURLs(page_url)  # Extract article URLs from the page
+def moneycontrol_task(baseurl,page_url):
+    articleURLs = pageURL_to_articleURLs(baseurl,page_url)  # Extract article URLs from the page
     if not articleURLs:
         return []  # If no articles, return empty list
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        futures = [executor.submit(articleURL_to_news, articleURL) for articleURL in articleURLs]
+        futures = [executor.submit(articleURL_to_news, baseurl,articleURL) for articleURL in articleURLs]
         news_data = []
         for future in concurrent.futures.as_completed(futures):
             result = future.result()
@@ -107,10 +111,10 @@ def moneycontrol_task(page_url):
         return news_data
 
 # Function to manage multi-threaded execution
-def multi_threaded_execution(page_urls):
+def multi_threaded_execution(baseurl,page_urls):
     final_results = []  # To store all results
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        futures = [executor.submit(moneycontrol_task, page_url) for page_url in page_urls]
+        futures = [executor.submit(moneycontrol_task, baseurl,page_url) for page_url in page_urls]
         for future in concurrent.futures.as_completed(futures):
             result = future.result()
             if result:
@@ -121,14 +125,15 @@ if __name__ == "__main__":
 
     now = datetime.now()
     date_str = now.strftime('%Y-%m-%d')
-
+    baseurl = "moneycontrol.com"
     page_urls = []
-    for page_index in range(0,30):
+    # for page_index in range(0,30):
+    for page_index in range(0,1):
         page_url = f"https://www.moneycontrol.com/news/business/markets/page-{page_index}/"
         page_urls.append(page_url)
 
     # Start the multi-threaded execution and store the result
-    news_data = multi_threaded_execution(page_urls)
+    news_data = multi_threaded_execution(baseurl,page_urls)
 
     # Convert the scraped news data into a Pandas DataFrame
     if news_data:
@@ -137,7 +142,7 @@ if __name__ == "__main__":
                         # .rename(columns={'index': 'Index'}) \
                         # .set_index("Index")
 
-        column_order = ['URL', 'title', 'subtitle', 'content', 'article time']
+        column_order = ['URL','Article url','title', 'subtitle', 'content', 'article time']
         news_data_df = news_data_df[column_order]
         news_data_df.to_csv("today_news_data.csv")
 

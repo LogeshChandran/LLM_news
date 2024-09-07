@@ -44,3 +44,9 @@ jobs:
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/python-webscraper:${{ env.IMAGE_TAG }}
           docker push ${{ secrets.DOCKER_USERNAME }}/python-webscraper:latest
+      
+      # Run the Docker container
+      - name: Run the Docker container
+        run: |
+          docker run --name python-webscraper-container \
+            ${{ secrets.DOCKER_USERNAME }}/python-webscraper:latest
