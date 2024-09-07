@@ -1,8 +1,9 @@
-name: Docker Image CI
+# name: Docker Image CI
+name : python-webscraper Docker Image CI
 
 on:
-  push:
-    branches: [ "main" ]
+  # push:
+    # branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
