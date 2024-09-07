@@ -18,11 +18,11 @@ jobs:
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      # Build the Docker image and tag it with the timestamp and latest
+      # Build the Docker image from the moneycontrol_data_get directory
       - name: Build the Docker image
         run: |
           IMAGE_TAG=$(date +%s)
-          docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/python-webscraper:${IMAGE_TAG} --tag ${{ secrets.DOCKER_USERNAME }}/python-webscraper:latest
+          docker build ./moneycontrol_data_get --file ./moneycontrol_data_get/Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/python-webscraper:${IMAGE_TAG} --tag ${{ secrets.DOCKER_USERNAME }}/python-webscraper:latest
 
       # Push the Docker image to Docker Hub
       - name: Push the Docker image to Docker Hub
