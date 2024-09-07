@@ -103,7 +103,7 @@ def articleURL_to_news(baseurl,url):
 def moneycontrol_task(baseurl,page_url):
     articleURLs = pageURL_to_articleURLs(baseurl,page_url)  # Extract article URLs from the page
     if not articleURLs:
-        return []  # If no articles, return empty list
+        return []  # If no articles, return empty list 
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
         futures = [executor.submit(articleURL_to_news, baseurl,articleURL) for articleURL in articleURLs]
