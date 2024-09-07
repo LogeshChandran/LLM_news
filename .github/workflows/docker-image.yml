@@ -7,12 +7,26 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      # Checkout the repository
+      - uses: actions/checkout@v4
+
+      # Log in to Docker Hub
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      # Build the Docker image and tag it with the timestamp and latest
+      - name: Build the Docker image
+        run: |
+          IMAGE_TAG=$(date +%s)
+          docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/python-webscraper:${IMAGE_TAG} --tag ${{ secrets.DOCKER_USERNAME }}/python-webscraper:latest
+
+      # Push the Docker image to Docker Hub
+      - name: Push the Docker image to Docker Hub
+        run: |
+          IMAGE_TAG=$(date +%s)
+          docker push ${{ secrets.DOCKER_USERNAME }}/python-webscraper:${IMAGE_TAG}
+          docker push ${{ secrets.DOCKER_USERNAME }}/python-webscraper:latest
