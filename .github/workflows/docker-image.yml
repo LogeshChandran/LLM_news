@@ -17,7 +17,7 @@ jobs:
       # Set up Docker image tag based on the current timestamp
       - name: Set up IMAGE_TAG
         id: tag
-        run: echo "IMAGE_TAG=$(date +'%Y-%b-%d-%H-%M-%S')" >> $GITHUB_ENV
+        run: echo "IMAGE_TAG=$(date +'%Y-%M-%d-%H-%M-%S')" >> $GITHUB_ENV
 
       # Log in to Docker Hub
       - name: Log in to Docker Hub
