@@ -19,15 +19,19 @@ def download_existing_dataset(repo_id):
         return pd.DataFrame()
 
 def merge_datasets(existing_df, new_df):
-    if not existing_df.empty:
-        # merged_df = pd.merge(existing_df, new_df, on='URL')
-        # merged_df = pd.concat([existing_df, new_df]).reset_index(drop=True)
-        merged_df = pd.concat([existing_df, new_df], ignore_index=True) \
-                            .reset_index(drop=True) \
-                            .drop_duplicates(subset='URL')
-        return merged_df
-    else:
-        return new_df
+    try:
+        if not existing_df.empty:
+            # merged_df = pd.merge(existing_df, new_df, on='URL')
+            # merged_df = pd.concat([existing_df, new_df]).reset_index(drop=True)
+            merged_df = pd.concat([existing_data_df, news_data_df], ignore_index=True) \
+                                .reset_index(drop=True) \
+                                .drop_duplicates(subset='Article url')
+            return merged_df
+        else:
+            return new_df
+    except Exception as e:
+        print(f"Error merging the dataset: {e}")
+        return pd.DataFrame()
     
 def pageURL_to_articleURLs(baseurl,url):
     print("Processing URL:", url)
@@ -128,7 +132,7 @@ if __name__ == "__main__":
     baseurl = "moneycontrol.com"
     page_urls = []
     for page_index in range(0,30):
-    # for page_index in range(0,1):
+    # for page_index in range(0,2):
         page_url = f"https://www.moneycontrol.com/news/business/markets/page-{page_index}/"
         page_urls.append(page_url)
 
@@ -162,4 +166,4 @@ if __name__ == "__main__":
         news_data = Dataset.from_pandas(news_data_df)
         
         merged_dataset.push_to_hub("Logeshkc/money_control_news")
-        news_data.push_to_hub("Logeshkc/news_data_sep_07")
+        # news_data.push_to_hub("Logeshkc/news_data_sep_07")
