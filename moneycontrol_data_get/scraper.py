@@ -4,10 +4,31 @@ from bs4 import BeautifulSoup
 import pandas as pd
 from huggingface_hub import login
 import os
-from datasets import Dataset
+from datasets import Dataset,load_dataset
+from datetime import datetime
 
 os.environ['HUGGING_FACE_WRITE_KEY'] = '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'
 
+def download_existing_dataset(repo_id):
+    try:
+        existing_dataset = load_dataset(repo_id)
+        existing_df = existing_dataset['train'].to_pandas()
+        return existing_df
+    except Exception as e:
+        print(f"Error downloading existing dataset: {e}")
+        return pd.DataFrame()
+
+def merge_datasets(existing_df, new_df):
+    if not existing_df.empty:
+        # merged_df = pd.merge(existing_df, new_df, on='URL')
+        # merged_df = pd.concat([existing_df, new_df]).reset_index(drop=True)
+        merged_df = pd.concat([existing_df, new_df], ignore_index=True) \
+                            .reset_index(drop=True) \
+                            .drop_duplicates(subset='URL')
+        return merged_df
+    else:
+        return new_df
+    
 def pageURL_to_articleURLs(url):
     print("Processing URL:", url)
     try:
@@ -72,7 +93,7 @@ def articleURL_to_news(url):
 
 # Function to handle both tasks in sequence
 def moneycontrol_task(page_url):
-    articleURLs = pageURL_to_articleURLs(page_url)  # Extract article URLs from the page
+    articleURLs = pageURL_to_articleURLs(page_url)[0:5]  # Extract article URLs from the page
     if not articleURLs:
         return []  # If no articles, return empty list
 
@@ -97,8 +118,12 @@ def multi_threaded_execution(page_urls):
     return final_results  # Return the complete set of results
 
 if __name__ == "__main__":
+
+    now = datetime.now()
+    date_str = now.strftime('%Y-%m-%d')
+
     page_urls = []
-    for page_index in range(1, 31):
+    for page_index in range(18, 19):
         page_url = f"https://www.moneycontrol.com/news/business/markets/page-{page_index}/"
         page_urls.append(page_url)
 
@@ -108,10 +133,28 @@ if __name__ == "__main__":
     # Convert the scraped news data into a Pandas DataFrame
     if news_data:
         news_data_df = pd.DataFrame(news_data)
-        # print(news_data_df)
-        news_data_df.to_csv("news_data.csv")
+        news_data_df = news_data_df.reset_index() \
+                        # .rename(columns={'index': 'Index'}) \
+                        # .set_index("Index")
+
+        column_order = ['URL', 'title', 'subtitle', 'content', 'article time']
+        news_data_df = news_data_df[column_order]
+        news_data_df.to_csv("today_news_data.csv")
 
         login(token=os.environ['HUGGING_FACE_WRITE_KEY'])
 
-        dataset = Dataset.from_csv("news_data.csv")
-        dataset.push_to_hub("Logeshkc/news_data_sep_07")
+        repo_id = "Logeshkc/money_control_news"
+        existing_data_df = download_existing_dataset(repo_id)
+        merged_data_df = merge_datasets(existing_data_df, news_data_df)
+        merged_data_df.reset_index() \
+                    # .rename(columns={'index': 'Index'}) \
+                    # .set_index("Index")
+        
+        merged_data_df = merged_data_df[column_order]
+        merged_data_df.to_csv("merged_news_data.csv", index=False)
+
+        merged_dataset = Dataset.from_pandas(merged_data_df)
+        news_data = Dataset.from_pandas(news_data_df)
+        
+        merged_dataset.push_to_hub("Logeshkc/money_control_news")
+        news_data.push_to_hub("Logeshkc/news_data_sep_07")

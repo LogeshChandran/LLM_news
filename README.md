@@ -1,5 +1,5 @@
 
-auto release
+# auto release
 # Commit Message Guidelines
 
 The following table shows how different types of commit messages will impact the version number according to Semantic Versioning (`major.minor.patch`) when using `semantic-release`:
@@ -14,7 +14,7 @@ The following table shows how different types of commit messages will impact the
 | **perf**                   | `perf: improve performance of feature`                   | `0.0.0`             | `0.0.1`         |
 | **test**                   | `test: add unit tests`                                   | `0.0.0`             | `0.0.0`         |
 | **chore**                  | `chore: automate build script`                           | `0.0.0`             | `0.0.0`         |
-| **feat** and **BREAKING CHANGE** | `feat: add API endpoint BREAKING CHANGE: update API response format` | `0.0.0`  | `1.0.0`         |
+| **feat** and **BREAKING CHANGE** | `feat: add API endpoint \n BREAKING CHANGE: update API response format` | `0.0.0`  | `1.0.0`         |
 
 ## Example Commands
 
