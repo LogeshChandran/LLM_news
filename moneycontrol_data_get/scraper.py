@@ -93,7 +93,7 @@ def articleURL_to_news(url):
 
 # Function to handle both tasks in sequence
 def moneycontrol_task(page_url):
-    articleURLs = pageURL_to_articleURLs(page_url)[0:5]  # Extract article URLs from the page
+    articleURLs = pageURL_to_articleURLs(page_url)  # Extract article URLs from the page
     if not articleURLs:
         return []  # If no articles, return empty list
 
@@ -123,7 +123,7 @@ if __name__ == "__main__":
     date_str = now.strftime('%Y-%m-%d')
 
     page_urls = []
-    for page_index in range(0, 5):
+    for page_index in range(0,30):
         page_url = f"https://www.moneycontrol.com/news/business/markets/page-{page_index}/"
         page_urls.append(page_url)
 
