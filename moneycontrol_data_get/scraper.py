@@ -123,7 +123,7 @@ if __name__ == "__main__":
     date_str = now.strftime('%Y-%m-%d')
 
     page_urls = []
-    for page_index in range(0, 31):
+    for page_index in range(0, 1):
         page_url = f"https://www.moneycontrol.com/news/business/markets/page-{page_index}/"
         page_urls.append(page_url)
 
