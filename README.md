@@ -14,7 +14,7 @@ The following table shows how different types of commit messages will impact the
 | **perf**                   | `perf: improve performance of feature`                   | `0.0.0`             | `0.0.1`         |
 | **test**                   | `test: add unit tests`                                   | `0.0.0`             | `0.0.0`         |
 | **chore**                  | `chore: automate build script`                           | `0.0.0`             | `0.0.0`         |
-| **feat** and **BREAKING CHANGE** | `feat: add API endpoint\nBREAKING CHANGE: update API response format` | `0.0.0`  | `1.0.0`         |
+| **feat** and **BREAKING CHANGE** | `feat: add API endpoint BREAKING CHANGE: update API response format` | `0.0.0`  | `1.0.0`         |
 
 ## Example Commands
 
