@@ -100,13 +100,16 @@ def articleURL_to_news(baseurl,url):
         return None  # Return None on error
 
 # Function to handle both tasks in sequence
-def moneycontrol_task(baseurl,page_url):
+def moneycontrol_task(baseurl,page_url,existing_data_df):
     articleURLs = pageURL_to_articleURLs(baseurl,page_url)  # Extract article URLs from the page
     if not articleURLs:
         return []  # If no articles, return empty list 
 
+    print(articleURLs)
+    existing_articleURLs_df = pd.DataFrame(existing_data_df, columns=['Article url'])
+    new_articleURLs = [url for url in articleURLs if url not in existing_data_df['Article url'].values]
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        futures = [executor.submit(articleURL_to_news, baseurl,articleURL) for articleURL in articleURLs]
+        futures = [executor.submit(articleURL_to_news, baseurl,articleURL) for articleURL in new_articleURLs]
         news_data = []
         for future in concurrent.futures.as_completed(futures):
             result = future.result()
@@ -115,10 +118,10 @@ def moneycontrol_task(baseurl,page_url):
         return news_data
 
 # Function to manage multi-threaded execution
-def multi_threaded_execution(baseurl,page_urls):
+def multi_threaded_execution(baseurl,page_urls,existing_data_df):
     final_results = []  # To store all results
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        futures = [executor.submit(moneycontrol_task, baseurl,page_url) for page_url in page_urls]
+        futures = [executor.submit(moneycontrol_task, baseurl,page_url,existing_data_df) for page_url in page_urls]
         for future in concurrent.futures.as_completed(futures):
             result = future.result()
             if result:
@@ -131,13 +134,31 @@ if __name__ == "__main__":
     date_str = now.strftime('%Y-%m-%d')
     baseurl = "moneycontrol.com"
     page_urls = []
-    for page_index in range(0,30):
-    # for page_index in range(0,2):
-        page_url = f"https://www.moneycontrol.com/news/business/markets/page-{page_index}/"
-        page_urls.append(page_url)
+    for page_index in range(1,31):
+    # for page_index in range(1,2):
+        market_page_url = f"https://www.moneycontrol.com/news/business/markets/page-{page_index}/"
+        business_page_url = f"https://www.moneycontrol.com/news/business/page-{page_index}/"
+        indian_news = f"https://www.moneycontrol.com/news/india/page-{page_index}/"
+        world_news = f"https://www.moneycontrol.com/news/world/page-{page_index}/"
+        technology_news = f"https://www.moneycontrol.com/news/technology/page-{page_index}/"
+        economy_news = f"https://www.moneycontrol.com/news/business/economy/page-{page_index}/"
+        business_companies_url = f"https://www.moneycontrol.com/news/business/companies/page-{page_index}/"
+
+        page_urls.extend([
+            market_page_url,
+            business_page_url,
+            indian_news,
+            world_news,
+            technology_news,
+            economy_news,
+            business_companies_url
+        ])
+
 
     # Start the multi-threaded execution and store the result
-    news_data = multi_threaded_execution(baseurl,page_urls)
+    repo_id = "Logeshkc/money_control_news"
+    existing_data_df = download_existing_dataset(repo_id)
+    news_data = multi_threaded_execution(baseurl,page_urls,existing_data_df)
 
     # Convert the scraped news data into a Pandas DataFrame
     if news_data:
@@ -152,14 +173,14 @@ if __name__ == "__main__":
 
         login(token=os.environ['HUGGING_FACE_WRITE_KEY'])
 
-        repo_id = "Logeshkc/money_control_news"
-        existing_data_df = download_existing_dataset(repo_id)
         merged_data_df = merge_datasets(existing_data_df, news_data_df)
         merged_data_df.reset_index() \
                     # .rename(columns={'index': 'Index'}) \
                     # .set_index("Index")
         
         merged_data_df = merged_data_df[column_order]
+        merged_data_df = merged_data_df.sort_values(by='article time', ascending=False) \
+                            .reset_index(drop=True)
         merged_data_df.to_csv("merged_news_data.csv", index=False)
 
         merged_dataset = Dataset.from_pandas(merged_data_df)

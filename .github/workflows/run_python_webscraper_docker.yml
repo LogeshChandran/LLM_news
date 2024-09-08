@@ -1,7 +1,7 @@
 name: Run python-webscraper Docker Container
 
 on:
-  push:
+  # push:
     # branches: [ "main" ]
   # pull_request:
   #   branches: [ "main" ]
