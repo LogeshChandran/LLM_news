@@ -10,7 +10,7 @@ on:
     types:
       - completed
   schedule:
-    - cron: "5 0/2 * * *"
+    - cron: "0 0/2 * * *"
 jobs: 
   run-container:
     runs-on: ubuntu-latest
