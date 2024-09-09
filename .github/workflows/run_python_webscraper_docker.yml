@@ -9,7 +9,8 @@ on:
     workflows: ["Build python-webscraper Docker Image CI"]
     types:
       - completed
-
+  schedule:
+    - cron: "5 0/2 * * *"
 jobs: 
   run-container:
     runs-on: ubuntu-latest
