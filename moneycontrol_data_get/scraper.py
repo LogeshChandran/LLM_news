@@ -139,8 +139,8 @@ if __name__ == "__main__":
     date_str = now.strftime('%Y-%m-%d')
     baseurl = "moneycontrol.com"
     page_urls = []
-    for page_index in range(1,31):
-    # for page_index in range(1,2):
+    # for page_index in range(1,31):
+    for page_index in range(1,2):
         market_page_url = f"https://www.moneycontrol.com/news/business/markets/page-{page_index}/"
         business_page_url = f"https://www.moneycontrol.com/news/business/page-{page_index}/"
         indian_news = f"https://www.moneycontrol.com/news/india/page-{page_index}/"
@@ -172,7 +172,8 @@ if __name__ == "__main__":
                         # .rename(columns={'index': 'Index'}) \
                         # .set_index("Index")
 
-        column_order = ['URL','Article url','title', 'subtitle', 'content', 'article time']
+        column_order = ['URL','Article url','title', 'subtitle', 'content', 
+                        'article datetime','article date','article time']
         news_data_df = news_data_df[column_order]
         news_data_df.to_csv("today_news_data.csv")
 
@@ -183,8 +184,8 @@ if __name__ == "__main__":
                     # .rename(columns={'index': 'Index'}) \
                     # .set_index("Index")
         
-        merged_data_df = merged_data_df[column_order]
-        merged_data_df = merged_data_df.sort_values(by='article time', ascending=False) \
+        # merged_data_df = merged_data_df[column_order]
+        merged_data_df = merged_data_df.sort_values(by='article datetime', ascending=False) \
                             .reset_index(drop=True)
         merged_data_df.to_csv("merged_news_data.csv", index=False)
 

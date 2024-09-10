@@ -42,7 +42,7 @@ jobs:
       # Push the Docker image to Docker Hub
       - name: Push the Docker image to Docker Hub
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/python-webscraper:${{ env.IMAGE_TAG }}
+          # docker push ${{ secrets.DOCKER_USERNAME }}/python-webscraper:${{ env.IMAGE_TAG }}
           docker push ${{ secrets.DOCKER_USERNAME }}/python-webscraper:latest
       
       # Run the Docker container
