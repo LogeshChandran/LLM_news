@@ -139,8 +139,8 @@ if __name__ == "__main__":
     date_str = now.strftime('%Y-%m-%d')
     baseurl = "moneycontrol.com"
     page_urls = []
-    # for page_index in range(1,31):
-    for page_index in range(1,2):
+    for page_index in range(1,31):
+    # for page_index in range(1,2):
         market_page_url = f"https://www.moneycontrol.com/news/business/markets/page-{page_index}/"
         business_page_url = f"https://www.moneycontrol.com/news/business/page-{page_index}/"
         indian_news = f"https://www.moneycontrol.com/news/india/page-{page_index}/"
