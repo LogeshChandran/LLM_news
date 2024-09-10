@@ -184,7 +184,7 @@ if __name__ == "__main__":
                     # .rename(columns={'index': 'Index'}) \
                     # .set_index("Index")
         
-        # merged_data_df = merged_data_df[column_order]
+        merged_data_df = merged_data_df[column_order]
         merged_data_df = merged_data_df.sort_values(by='article datetime', ascending=False) \
                             .reset_index(drop=True)
         merged_data_df.to_csv("merged_news_data.csv", index=False)
