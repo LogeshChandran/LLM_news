@@ -161,7 +161,7 @@ if __name__ == "__main__":
 
 
     # Start the multi-threaded execution and store the result
-    repo_id = "Logeshkc/money_control_news"
+    repo_id = "LogeshChandran/money_control_news"
     existing_data_df = download_existing_dataset(repo_id)
     news_data = multi_threaded_execution(baseurl,page_urls,existing_data_df)
 
@@ -192,5 +192,5 @@ if __name__ == "__main__":
         merged_dataset = Dataset.from_pandas(merged_data_df)
         news_data = Dataset.from_pandas(news_data_df)
         
-        merged_dataset.push_to_hub("Logeshkc/money_control_news")
-        # news_data.push_to_hub("Logeshkc/news_data_sep_07")
+        merged_dataset.push_to_hub("LogeshChandran/money_control_news")
+        # news_data.push_to_hub("LogeshChandran/news_data_sep_07")
