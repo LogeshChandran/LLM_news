@@ -167,7 +167,7 @@ if __name__ == "__main__":
     news_data = multi_threaded_execution(baseurl,page_urls,existing_data_df)
 
     # Convert the scraped news data into a Pandas DataFrame
-    if news_data:
+    if news_data or True:
         news_data_df = pd.DataFrame(news_data)
         news_data_df = news_data_df.reset_index() \
                         # .rename(columns={'index': 'Index'}) \
