@@ -173,8 +173,7 @@ if __name__ == "__main__":
                         # .rename(columns={'index': 'Index'}) \
                         # .set_index("Index")
 
-        column_order = ['URL','Article url','title', 'subtitle', 'content', 
-                        'article datetime','article date','article time']
+        column_order = ['URL','Article url','title', 'subtitle', 'content', 'article datetime','article date','article time']
         news_data_df = news_data_df[column_order]
         news_data_df.to_csv("today_news_data.csv")
 
