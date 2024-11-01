@@ -28,8 +28,9 @@ def summarize_content(text):
     except Exception as e:
         return []
 
-# Apply summarization to each news article
-filtered_df['new summary'] = filtered_df['content'].apply(summarize_content)
-
-# Combine summaries into one message
-message = "\n\n".join([f"{i+1}. {point}" for i, point in enumerate(filtered_df['new summary'].tolist())])
+def main():
+    filtered_df['new summary'] = filtered_df['content'].apply(summarize_content)
+    message = "\n\n".join([f"{i+1}. {point}" for i, point in enumerate(filtered_df['new summary'].tolist())])
+    
+if __name__=="__main__":
+    main()
