@@ -6,6 +6,7 @@ from huggingface_hub import login
 import os
 from datasets import Dataset,load_dataset
 from datetime import datetime
+import text_summary_using_llm
 
 os.environ['HUGGING_FACE_WRITE_KEY'] = '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'
 
@@ -194,3 +195,4 @@ if __name__ == "__main__":
         
         merged_dataset.push_to_hub("LogeshChandran/money_control_news")
         # news_data.push_to_hub("LogeshChandran/news_data_sep_07")
+        text_summary_using_llm.main()
