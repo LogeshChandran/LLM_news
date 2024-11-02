@@ -21,7 +21,7 @@ def summarize_content(text):
     inputs = tokenizer.encode(text, return_tensors="pt", max_length=1024, truncation=True)
 
     try:
-        summary_ids = model.generate(inputs, max_length=50, min_length=25, length_penalty=2.0, num_beams=4, early_stopping=True)
+        summary_ids = model.generate(inputs, max_length=25, min_length=10, length_penalty=2.0, num_beams=4, early_stopping=True)
         summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
         points = summary.split('\n')
         return [point for point in points if point.strip()][0]
